@@ -4,14 +4,33 @@
 #include "fcntl.h"
 #include "fs.h"
 
+int count = 0;
 void r(char *path);
-void ast(char *path);
+void ast();
 char *strcat(char *a, char *b){
   char *temp=a;
   while(*a) ++a;
   while(*b) *a++=*b++;
   *a=0;
   return temp;
+}
+
+char *fmtname(char *path)
+{
+  static char buf[DIRSIZ+1];
+  char *p;
+
+  // Find first character after last slash.
+  for(p=path+strlen(path); p >= path && *p != '/'; p--)
+    ;
+  p++;
+
+  // Return blank-padded name.
+  if(strlen(p) >= DIRSIZ)
+    return p;
+  memmove(buf, p, strlen(p));
+  memset(buf+strlen(p), ' ', DIRSIZ-strlen(p));
+  return buf;
 }
 
 int main(int argc, char *argv[])
@@ -37,9 +56,7 @@ int main(int argc, char *argv[])
       }
     }
   }else if(strcmp(argv[1], "*") == 0){
-    for(i=2; i<argc; i++){
-      ast(argv[i]);
-    }
+    ast();
   }else{
     for(i=1; i<argc; i++){
       if(unlink(argv[i]) < 0){
@@ -90,7 +107,57 @@ void r(char *path){
   close(open_status);
 }
 
-void ast(char *path){
-  // char cwd[1024] = {0};
-  
+void ast(){
+  char buf[512], *p;
+  int fd;
+  char *path = ".";
+  struct dirent de;
+  struct stat st;
+
+  if((fd = open(path, 0)) < 0){
+    printf(2, "ls: cannot open %s\n", path);
+    return;
+  }
+
+  if(fstat(fd, &st) < 0){
+    printf(2, "ls: cannot stat %s\n", path);
+    close(fd);
+    return;
+  }
+
+  switch(st.type){
+  case T_FILE:
+    printf(1, "%s %d %d %d\n", fmtname(path), st.type, st.ino, st.size);
+    unlink(path);
+    break;
+
+  case T_DIR:
+    if(strlen(path) + 1 + DIRSIZ + 1 > sizeof buf){
+      printf(1, "ls: path too long\n");
+      break;
+    }
+    strcpy(buf, path);
+    p = buf+strlen(buf);
+    *p++ = '/';
+    while(read(fd, &de, sizeof(de)) == sizeof(de)){
+      if(de.inum == 0)
+        continue;
+      memmove(p, de.name, DIRSIZ);
+      p[DIRSIZ] = 0;
+      if(stat(buf, &st) < 0){
+        printf(1, "ls: cannot stat %s\n", buf);
+        continue;
+      }
+      
+      if (st.type == T_FILE) {
+        printf(1, "name = %s, type = file, size = %d sudah dihapus\n", fmtname(buf), st.size);
+        unlink(buf);
+      }else {
+        printf(1,"name = %s, type = folder, size = %d Tidak bisa dihapus karena berupa direktori\n", 
+          buf, st.size);
+      }
+    }
+    break;
+  }
+  close(fd);
 } 
