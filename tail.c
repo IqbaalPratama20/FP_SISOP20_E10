@@ -27,7 +27,7 @@ void tail (int fd, char *name, int line)
         printf(1, "tail: read error\n");
         exit();
     }
-    int fd1 = open("temp", 0); 
+    int fd1 = open("temp", O_RDONLY); 
     int count=0;
     int start=total-line;                     
     while((n = read(fd1, str, sizeof(str))) > 0 )
