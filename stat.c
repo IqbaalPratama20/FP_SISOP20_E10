@@ -170,14 +170,17 @@ void stat_print(char *path){
       "UID: %d |--| GID: %d |--| Context:  \n", 
       st.uid, st.gid);
     printf(1, 
-      "Access time:  %d\n", 
-      st.st_atime->hour);
+      "Access time: %d-%d-%d %d:%d:%d\n", 
+      st.st_atime->year, st.st_atime->month, st.st_atime->day, st.st_atime->hour, 
+      st.st_atime->minute, st.st_atime->second);
     printf(1, 
-      "Modify:  %d-%d-%d %d:%d:%d\n"
-      );
+      "Modify:  %d-%d-%d %d:%d:%d\n",
+      st.st_atime->year, st.st_atime->month, st.st_atime->day, st.st_atime->hour, 
+      st.st_atime->minute, st.st_atime->second);
     printf(1, 
-      "Change:  %d-%d-%d %d:%d:%d\n"
-      );
+      "Change:  %d-%d-%d %d:%d:%d\n",
+      st.st_atime->year, st.st_atime->month, st.st_atime->day, st.st_atime->hour, 
+      st.st_atime->minute, st.st_atime->second);
     printf(1, 
       "Birth:  \n" 
       );  
@@ -202,14 +205,17 @@ void stat_print(char *path){
       "UID: %d |--| GID: %d |--| Context:  \n", 
       st.uid, st.gid);
     printf(1, 
-      "Access time:  %d\n", 
-      st.st_atime->hour);
+      "Access time: %d-%d-%d %d:%d:%d\n", 
+      st.st_atime->year, st.st_atime->month, st.st_atime->day, st.st_atime->hour, 
+      st.st_atime->minute, st.st_atime->second);
     printf(1, 
-      "Modify:  %d-%d-%d %d:%d:%d\n"
-      );
+      "Modify:  %d-%d-%d %d:%d:%d\n",
+      st.st_atime->year, st.st_atime->month, st.st_atime->day, st.st_atime->hour, 
+      st.st_atime->minute, st.st_atime->second);
     printf(1, 
-      "Change:  %d-%d-%d %d:%d:%d\n"
-      );
+      "Change:  %d-%d-%d %d:%d:%d\n",
+      st.st_atime->year, st.st_atime->month, st.st_atime->day, st.st_atime->hour, 
+      st.st_atime->minute, st.st_atime->second);
     printf(1, 
       "Birth:  \n" 
       );
