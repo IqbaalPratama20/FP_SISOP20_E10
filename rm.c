@@ -148,13 +148,10 @@ void ast(){
         printf(1, "ls: cannot stat %s\n", buf);
         continue;
       }
-      
       if (st.type == T_FILE) {
-        printf(1, "name = %s, type = file, size = %d sudah dihapus\n", fmtname(buf), st.size);
         unlink(buf);
       }else {
-        printf(1,"name = %s, type = folder, size = %d Tidak bisa dihapus karena berupa direktori\n", 
-          buf, st.size);
+        printf(1,"rm: cannot remove '%s': Is a directory\n", buf);
       }
     }
     break;
